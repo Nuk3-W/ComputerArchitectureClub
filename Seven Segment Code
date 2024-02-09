@@ -1,0 +1,41 @@
+`timescale 1ns / 1ps
+
+
+module Base_Reg(
+    input   clk,
+    input   [4:0]  BIn,
+    output  reg [3:0]  Ones,
+    output  reg [3:0]  Tens
+    );
+
+    reg [3:0] i = 0;
+    reg [15:0] ShiftReg = 0;
+    reg [3:0] TempOnes = 0;
+    reg [3:0] TempTens = 0;
+    reg [4:0] OldBits = 0;
+
+    always @(posedge clk) begin
+        if (i == 0 && (OldBits != BIn)) begin
+            ShiftReg = 16'd0;
+            OldBits = BIn;
+            ShiftReg[4:0] = BIn;
+            TempOnes = ShiftReg [11:8];
+            TempTens = ShiftReg [15:12];
+            i = i + 1;
+        end
+        if (i < 9 && i > 0) begin
+            if (TempTens >= 5) TempTens = TempTens + 3;
+            if (TempOnes >= 5) TempOnes = TempOnes + 3;
+            ShiftReg [15:8] = {TempTens, TempOnes};
+            ShiftReg = ShiftReg << 1;
+            TempOnes = ShiftReg [11:8];
+            TempTens = ShiftReg [15:12];
+            i = i + 1;
+        end
+        if (i == 9) begin
+            i = 0;
+            Ones = TempOnes;
+            Tens = TempTens;
+        end 
+    end
+endmodule
