@@ -1,0 +1,21 @@
+`timescale 1ns / 1ps
+//`include "Full_Adder.v"
+
+module Four_Bit_Adder(
+    input wire [3:0] A,
+    input wire [3:0] B,
+    //input sub, 
+    output C_Out,
+    output [3:0] Sum
+    );
+    
+    wire C1, C2, C3; //cout connection wire between each adder
+    
+    
+    
+    Full_Adder x1 (.A(A[0]), .B(B[0]/*^sub*/), .C_In(1'b0), .C_Out(C1), .Sum(Sum[0]));
+    Full_Adder x2 (.A(A[1]), .B(B[1]/*^sub*/), .C_In(C1), .C_Out(C2), .Sum(Sum[1]));
+    Full_Adder x3 (.A(A[2]), .B(B[2]/*^sub*/), .C_In(C2), .C_Out(C3), .Sum(Sum[2]));
+    Full_Adder x4 (.A(A[3]), .B(B[3]/*^sub*/), .C_In(C3), .C_Out(C_Out), .Sum(Sum[3]));
+    
+endmodule
