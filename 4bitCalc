@@ -1,0 +1,26 @@
+`timescale 1ns / 1ps
+
+module Calc(
+    input clk_100MHz,
+    input [3:0] sw1,
+    input [3:0] sw2,
+    //input mode,
+    input reset,
+    output [0:6] seg,
+    output [3:0] digit,
+    output [4:0] LED
+    );
+    wire [4:0] Sum;
+    wire [3:0] OnesW, TensW;
+
+
+    assign LED = Sum [4:0];
+
+
+
+    Four_Bit_Adder FourBitAdder1 (/*.sub(mode),*/ .A(sw1), .B(sw2), .C_Out(Sum[4]), .Sum(Sum[3:0]));
+    SevenSegDis_Control Seg7Con (.clk_100MHz(clk_100MHz), .reset(reset), .ones(OnesW), .tens(TensW), .seg(seg), .digit(digit));
+    Base_Reg Shifter (.clk(clk_100MHz), .BIn(Sum[4:0]), .Ones(OnesW), .Tens(TensW));
+
+
+endmodule
